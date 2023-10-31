@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="bcutil-jdk15on-1.70">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/bcutil-jdk15on-1.70.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/bcprov-jdk15on-1.70.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/bcpkix-jdk15on-1.70.jar!/" />
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>
