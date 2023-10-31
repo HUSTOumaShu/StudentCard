@@ -26,8 +26,8 @@ public class CSR_Generator {
 
     public CSR_Generator(String x500Name, PublicKey publicKey) {
         X500Principal principal = new X500Principal(x500Name);
-        X500Name subject = X500Name.getInstance(principal);
-        SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfo.getInstance(publicKey);
+        X500Name subject = X500Name.getInstance(principal.getEncoded());
+        SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfo.getInstance(publicKey.getEncoded());
         info = new CertificationRequestInfo(subject, publicKeyInfo, new DERSet());
     }
 

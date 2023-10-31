@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -8,6 +9,7 @@ import apdu.APDU;
 import apdu.List_of_apdus;
 //import services.Verify;
 import services.CSR_Generation;
+import tools.HexConverter;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -15,24 +17,33 @@ public class Main {
         apdu.connect();
         List_of_apdus list_of_apdus = new List_of_apdus();
 
-        apdu.selectApplet(list_of_apdus.getCsr_system());
-        String response = apdu.sendData((byte)0x00, (byte)0x03, (byte)0x01, (byte)0x02, new byte[] {}, false);
-        System.out.println(response);
-//		try {
-//			String subject = "CN=Test,OU=Test,O=Test,S=Test,C=Test";
-//			CSR_Generation generation = new CSR_Generation(apdu, list_of_apdus);
-//			byte[] csr = generation.genCSR(subject);
-//			System.out.println(csr.toString());
-//		} catch (NoSuchAlgorithmException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InvalidKeySpecException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//        apdu.selectApplet(list_of_apdus.getCsr_system());
+//        String response = apdu.sendData((byte)0x00, (byte)0x03, (byte)0x01, (byte)0x02, new byte[] {}, false);
+//        StringBuilder sb = new StringBuilder(response);
+//        String exponent = sb.substring(4,10);
+//        String modulus = sb.substring(14);
+//        System.out.println(exponent);
+//        System.out.println(modulus);
+		try {
+			String subject = "CN=Test,OU=Test,O=Test,S=Test,C=Test";
+			CSR_Generation generation = new CSR_Generation(apdu, list_of_apdus, subject);
+			String csr = generation.genCSR(subject);
+            String csr_file = "csr_file.csr";
+            PrintWriter out = new PrintWriter(csr_file);
+            System.out.println(csr_file);
+            out.println(csr);
+            out.close();
+            System.out.println(csr);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         /*
          * Verify user via password
