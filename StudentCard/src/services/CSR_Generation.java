@@ -17,6 +17,7 @@ import java.util.Base64;
 
 import apdu.APDU;
 import apdu.List_of_apdus;
+import org.bouncycastle.util.encoders.Hex;
 import tools.CSR_Generator;
 import tools.Hash;
 import tools.HexConverter;
@@ -38,6 +39,7 @@ public class CSR_Generation {
         byte[] certInfo = generator.getCertInfo();
         byte[] certHash = new Hash().hash(certInfo);
         byte[] certSign = signData(certHash);
+        System.out.println(HexConverter.convert(certSign));
         String csr = generator.generateCSR(certSign);
         return csr;
     }
@@ -45,17 +47,31 @@ public class CSR_Generation {
     /*
      * Method with card
      */
+
+
+
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
         apdu.selectApplet(list_of_apdus.getCsr_system());
-        String response = apdu.sendData((byte)0x00, (byte)0x03, (byte)0x01, (byte)0x02, new byte[] {}, false);
-        StringBuilder sb = new StringBuilder(response);
-        String exponent_str = sb.substring(4,10);
-        String modulus_str = sb.substring(14);
-        BigInteger exponent  = new BigInteger(exponent_str);
-        BigInteger modulus = new BigInteger(modulus_str, 16);
+
+        String res_exp = apdu.sendData((byte)0x00, (byte)0x04, (byte)0x01, (byte)0x02, new byte[] {}, false);
+        BigInteger exponent = new BigInteger(res_exp);
+
+        String res_mod_start = apdu.sendData((byte)0x00, (byte)0x05, (byte)0x01, (byte)0x02, new byte[] {}, false);
+        String res_mod_end = apdu.sendData((byte)0x00, (byte)0x06, (byte)0x01, (byte)0x02, new byte[] {}, false);
+        String res_mod = res_mod_start + res_mod_end;
+        BigInteger modulus = new BigInteger(res_mod, 16);
+
+
+//        String response = apdu.sendData((byte)0x00, (byte)0x03, (byte)0x01, (byte)0x02, new byte[] {}, false);
+//        StringBuilder sb = new StringBuilder(response);
+//        String exponent_str = sb.substring(4,10);
+//        String modulus_str = sb.substring(14);
+//        BigInteger exponent  = new BigInteger(exponent_str);
+//        BigInteger modulus = new BigInteger(modulus_str, 16);
         RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey publicKey = kf.generatePublic(spec);
+        System.out.println(res_mod);
 
         return publicKey;
     }
