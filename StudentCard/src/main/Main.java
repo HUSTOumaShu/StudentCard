@@ -16,14 +16,6 @@ public class Main {
         apdu.connect();
         List_of_apdus list_of_apdus = new List_of_apdus();
 
-        // Generate new key pair
-        apdu.selectApplet(list_of_apdus.getCsr_system());
-        apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {}, false);
-
-        // Sign
-//        apdu.selectApplet(list_of_apdus.getCsr_system());
-//        apdu.sendData((byte)0x00, (byte)0x01, (byte)0x01, (byte)0x02, new byte[] {0x20,0x20,0x47,0x57}, true);
-
 		try {
 			String subject = "CN=username,O=Test,L=Test,C=VN";
 			CSR_Generation generation = new CSR_Generation(apdu, list_of_apdus, subject);
@@ -40,42 +32,6 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-        /*
-         * Verify user via password
-         */
-//		Verify verify = new Verify(apdu, list_of_apdus);
-//		boolean check = verify.verify();
-//		if(check) System.out.println("Access success..");
-//		else System.out.println("Invalid information!!");
-
-//		// send data and receive data
-//		apdu.selectApplet(list_of_apdus.getService_sendData());
-//		apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {0x20, 0x20, 0x47, 0x57}, true);
-//
-//		// send data and receive data after encrypted
-//		apdu.selectApplet(list_of_apdus.getService_cryptoData());
-//		apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {0x20, 0x20, 0x47, 0x57}, true);
-//		apdu.sendData((byte)0x00, (byte)0x01, (byte)0x01, (byte)0x02, "C610AFFA30D84AA9FCB65302F69BBCCC", true);
-//
-//		// generate random data
-//		apdu.selectApplet(list_of_apdus.getService_genRandom());
-//		apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {0x20, 0x20, 0x47, 0x57}, true);
-
-//		/*
-//		 * TGP System
-//		 */
-//		apdu.selectApplet(list_of_apdus.getTgp_system());
-//		// Sign
-//		apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {0x20, 0x20, 0x47, 0x57}, true);
-//		// Verify and receive random key
-//		apdu.sendData((byte)0x00, (byte)0x01, (byte)0x01, (byte)0x02, new byte[] {0x20, 0x20, 0x47, 0x57}, true);
-//		// Connect to server1 to get key
-//		System.out.println("Connect to Server and get the random key: ");
-//		apdu.selectApplet(list_of_apdus.getTgp_server1());
-//		apdu.sendData((byte)0x00, (byte)0x00, (byte)0x01, (byte)0x02, new byte[] {}, true);
-
-
 
         apdu.disConnect();
     }

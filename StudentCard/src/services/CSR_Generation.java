@@ -36,42 +36,30 @@ public class CSR_Generation {
     }
 
     public String genCSR(String subject) throws Exception {
-        byte[] certInfo = generator.getCertInfo();
-        byte[] certHash = new Hash().hash(certInfo);
-        byte[] certSign = signData(certHash);
-        System.out.println(HexConverter.convert(certSign));
-        String csr = generator.generateCSR(certSign);
+        byte[] certInfo = generator.getCertInfo();      // generate CSR Request Info
+        byte[] certHash = new Hash().hash(certInfo);    // Hash CSR Request Info with RSA256
+        byte[] certSign = signData(certHash);           // Sign with card
+        String csr = generator.generateCSR(certSign);   // Convert to string
         return csr;
     }
-
-    /*
-     * Method with card
-     */
-
-
 
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
         apdu.selectApplet(list_of_apdus.getCsr_system());
 
+        // Get exponent of public key
         String res_exp = apdu.sendData((byte)0x00, (byte)0x04, (byte)0x01, (byte)0x02, new byte[] {}, false);
         BigInteger exponent = new BigInteger(res_exp);
 
+        // Get modulus of public key
         String res_mod_start = apdu.sendData((byte)0x00, (byte)0x05, (byte)0x01, (byte)0x02, new byte[] {}, false);
         String res_mod_end = apdu.sendData((byte)0x00, (byte)0x06, (byte)0x01, (byte)0x02, new byte[] {}, false);
         String res_mod = res_mod_start + res_mod_end;
         BigInteger modulus = new BigInteger(res_mod, 16);
 
-
-//        String response = apdu.sendData((byte)0x00, (byte)0x03, (byte)0x01, (byte)0x02, new byte[] {}, false);
-//        StringBuilder sb = new StringBuilder(response);
-//        String exponent_str = sb.substring(4,10);
-//        String modulus_str = sb.substring(14);
-//        BigInteger exponent  = new BigInteger(exponent_str);
-//        BigInteger modulus = new BigInteger(modulus_str, 16);
+        // Restore public key from exponent and modulus
         RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey publicKey = kf.generatePublic(spec);
-        System.out.println(res_mod);
 
         return publicKey;
     }
