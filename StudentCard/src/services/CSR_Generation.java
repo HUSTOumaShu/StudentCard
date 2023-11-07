@@ -3,10 +3,7 @@ package services;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
@@ -37,9 +34,17 @@ public class CSR_Generation {
 
     public String genCSR(String subject) throws Exception {
         byte[] certInfo = generator.getCertInfo();      // generate CSR Request Info
-        byte[] certHash = new Hash().hash(certInfo);    // Hash CSR Request Info with RSA256
+        byte[] certHash = Hash.hash(certInfo);          // Hash CSR Request Info with SHA256
         byte[] certSign = signData(certHash);           // Sign with card
         String csr = generator.generateCSR(certSign);   // Convert to string
+
+        Signature sig = Signature.getInstance("SHA1withRSA");
+        sig.initVerify(getPublicKey());
+        sig.update(certHash);
+        boolean ret = sig.verify(certSign);
+        System.out.println(HexConverter.convert(certSign));
+        System.out.println(ret);
+
         return csr;
     }
 
@@ -48,7 +53,7 @@ public class CSR_Generation {
 
         // Get exponent of public key
         String res_exp = apdu.sendData((byte)0x00, (byte)0x04, (byte)0x01, (byte)0x02, new byte[] {}, false);
-        BigInteger exponent = new BigInteger(res_exp);
+        BigInteger exponent = new BigInteger(res_exp, 16);
 
         // Get modulus of public key
         String res_mod_start = apdu.sendData((byte)0x00, (byte)0x05, (byte)0x01, (byte)0x02, new byte[] {}, false);
@@ -60,6 +65,8 @@ public class CSR_Generation {
         RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey publicKey = kf.generatePublic(spec);
+
+        System.out.println(res_mod);
 
         return publicKey;
     }

@@ -11,14 +11,12 @@ public class Hash {
             MessageDigest digest = MessageDigest.getInstance("SHA256");
             hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        new HexConverter();
         return HexConverter.convert(hash);
     }
 
-    public byte[] hash(byte[] data) throws NoSuchAlgorithmException {
+    public static byte[] hash(byte[] data) throws NoSuchAlgorithmException {
         byte[] hash = new byte[] {};
         MessageDigest digest = MessageDigest.getInstance("SHA256");
         hash = digest.digest(data);
