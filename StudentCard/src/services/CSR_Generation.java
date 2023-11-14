@@ -3,14 +3,11 @@ package services;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.*;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
-import java.util.Base64;
 
 import apdu.APDU;
 import apdu.List_of_apdus;
@@ -34,16 +31,8 @@ public class CSR_Generation {
 
     public String genCSR(String subject) throws Exception {
         byte[] certInfo = generator.getCertInfo();      // generate CSR Request Info
-        byte[] certHash = Hash.hash(certInfo);          // Hash CSR Request Info with SHA256
-        byte[] certSign = signData(certHash);           // Sign with card
+        byte[] certSign = signData(certInfo);           // Sign with card
         String csr = generator.generateCSR(certSign);   // Convert to string
-
-        Signature sig = Signature.getInstance("SHA1withRSA");
-        sig.initVerify(getPublicKey());
-        sig.update(certHash);
-        boolean ret = sig.verify(certSign);
-        System.out.println(HexConverter.convert(certSign));
-        System.out.println(ret);
 
         return csr;
     }
@@ -66,15 +55,27 @@ public class CSR_Generation {
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey publicKey = kf.generatePublic(spec);
 
-        System.out.println(res_mod);
-
         return publicKey;
     }
 
     public byte[] signData(byte[] data) {
+        // Send length of data for signing
+        int certLenTmp = data.length;
+        byte[] certLen = BigInteger.valueOf(certLenTmp).toByteArray();
         apdu.selectApplet(list_of_apdus.getCsr_system());
-        String response = apdu.sendData((byte)0x00, (byte)0x01, (byte)0x01, (byte)0x02, data, false);
-        new HexConverter();
+        apdu.sendData((byte)0x00, (byte)0x10, (byte)0x01, (byte)0x02, certLen, false);
+
+        // Send data
+        byte[] data_start = Arrays.copyOfRange(data, 0, 255);
+        byte[] data_end = Arrays.copyOfRange(data, 255, data.length);
+        System.out.println(HexConverter.convert(data));
+        System.out.println(HexConverter.convert(data_start));
+        System.out.println(HexConverter.convert(data_end));
+        apdu.sendData((byte)0x00, (byte)0x11, (byte)0x01, (byte)0x02, data_start, false);
+        apdu.sendData((byte)0x00, (byte)0x12, (byte)0x01, (byte)0x02, data_end, false);
+
+        // Sign data
+        String response = apdu.sendData((byte)0x00, (byte)0x01, (byte)0x01, (byte)0x02, new byte[] {}, false);
         return HexConverter.hexStringToByteArray(response);
     }
 

@@ -8,7 +8,6 @@ import java.security.spec.InvalidKeySpecException;
 import apdu.APDU;
 import apdu.List_of_apdus;
 import services.CSR_Generation;
-import tools.HexConverter;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -17,7 +16,7 @@ public class Main {
         List_of_apdus list_of_apdus = new List_of_apdus();
 
 		try {
-			String subject = "CN=username,O=Test,L=Test,C=VN";
+			String subject = "CN=test_user,O=HUST,L=Test,C=VN";
 			CSR_Generation generation = new CSR_Generation(apdu, list_of_apdus, subject);
 			String csr = generation.genCSR(subject);
             String csr_file = "csr_file.csr";

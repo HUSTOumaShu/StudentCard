@@ -39,7 +39,7 @@ public class CSR_Generator {
 
     public String generateCSR(byte[] csrSignature) throws Exception {
         try {
-            final AlgorithmIdentifier algorithm = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA1withRSA");
+            final AlgorithmIdentifier algorithm = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256withRSA");
             CertificationRequest certRequest = new CertificationRequest(info, algorithm, new DERBitString(csrSignature));
             PKCS10CertificationRequest pkcs10CertificationRequest = new PKCS10CertificationRequest(certRequest);
             return convertCertReqToPem(pkcs10CertificationRequest);
