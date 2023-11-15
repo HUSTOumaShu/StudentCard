@@ -42,6 +42,9 @@ public class List_of_apdus {
     private CommandAPDU csr_system = new CommandAPDU(new byte[] {0x00,
             (byte)0xA4, 0x04, 0x00, 0x06,
             (byte)0x20, 0x20, 0x47, 0x57, 0x01, 0x01});
+    private CommandAPDU certificate = new CommandAPDU(new byte[] {0x00,
+            (byte)0xA4, 0x04, 0x00, 0x06,
+            (byte)0x20, 0x20, 0x47, 0x57, 0x01, 0x02});
 
     /*
      * Other services
@@ -126,5 +129,6 @@ public class List_of_apdus {
     public void setCsr_system(CommandAPDU csr_system) {
         this.csr_system = csr_system;
     }
-
+    public CommandAPDU getCertificate() { return certificate; }
+    public void setCertificate(CommandAPDU certificate) { this.certificate = certificate; }
 }
