@@ -2,26 +2,28 @@ package services;
 
 import apdu.APDU;
 import apdu.List_of_apdus;
-import org.bouncycastle.jcajce.provider.asymmetric.X509;
-import org.bouncycastle.util.encoders.Hex;
 import tools.HexConverter;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
-public class Certificate {
-    private APDU apdu;
-    private List_of_apdus list_of_apdus;
+public class Certification {
+    protected APDU apdu;
+    protected List_of_apdus list_of_apdus;
     X509Certificate certificate;
 
-    public Certificate(APDU apdu, List_of_apdus list_of_apdus, String filepath) throws CertificateException, FileNotFoundException {
+    public Certification(APDU apdu, List_of_apdus list_of_apdus) {
+        this.apdu = apdu;
+        this.list_of_apdus = list_of_apdus;
+    }
+
+    public Certification(APDU apdu, List_of_apdus list_of_apdus, String filepath) throws CertificateException, FileNotFoundException {
         this.apdu = apdu;
         this.list_of_apdus = list_of_apdus;
         CertificateFactory fac = CertificateFactory.getInstance("X509");
@@ -97,4 +99,7 @@ public class Certificate {
         X509Certificate cert = (X509Certificate)(fac.generateCertificate(new ByteArrayInputStream(certBytes)));
         return cert;
     }
+
+    public void setCertificate(X509Certificate certificate) { this.certificate = certificate; }
+    public X509Certificate getCertificate() { return certificate; }
 }

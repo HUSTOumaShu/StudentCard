@@ -68,9 +68,6 @@ public class CSR_Generation {
         // Send data
         byte[] data_start = Arrays.copyOfRange(data, 0, 255);
         byte[] data_end = Arrays.copyOfRange(data, 255, data.length);
-        System.out.println(HexConverter.convert(data));
-        System.out.println(HexConverter.convert(data_start));
-        System.out.println(HexConverter.convert(data_end));
         apdu.sendData((byte)0x00, (byte)0x11, (byte)0x01, (byte)0x02, data_start, false);
         apdu.sendData((byte)0x00, (byte)0x12, (byte)0x01, (byte)0x02, data_end, false);
 

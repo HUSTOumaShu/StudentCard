@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="Itext7-Core">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/barcodes-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/forms-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/io-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/kernel-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/layout-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdfa-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdftest-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/sign-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/styled-xml-parser-7.1.4.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/svg-7.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/barcodes-7.1.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/forms-7.1.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/io-7.1.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdfa-7.1.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdftest-7.1.4-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/sign-7.1.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/barcodes-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/forms-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/io-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/kernel-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/layout-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdfa-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/pdftest-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/sign-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/styled-xml-parser-7.1.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/itext7-core/svg-7.1.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
