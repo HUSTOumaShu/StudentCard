@@ -1,40 +1,51 @@
 package services;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 
 import apdu.APDU;
 import apdu.List_of_apdus;
-import org.bouncycastle.util.encoders.Hex;
+import com.tencent.kona.sun.security.x509.X500Name;
 import tools.CSR_Generator;
-import tools.Hash;
 import tools.HexConverter;
 
 public class CSR_Generation {
     private APDU apdu;
     private List_of_apdus list_of_apdus;
-    private CSR_Generator generator;
-    private String x500Name;
 
-    public CSR_Generation(APDU apdu, List_of_apdus list_of_apdus, String x500Name) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+    public CSR_Generation(APDU apdu, List_of_apdus list_of_apdus) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         this.apdu = apdu;
         this.list_of_apdus = list_of_apdus;
-        this.x500Name = x500Name;
-        generator = new CSR_Generator(x500Name, getPublicKey());
     }
 
     public String genCSR(String subject) throws Exception {
-        byte[] certInfo = generator.getCertInfo();      // generate CSR Request Info
-        byte[] certSign = signData(certInfo);           // Sign with card
-        String csr = generator.generateCSR(certSign);   // Convert to string
+        X500Name x500Name = new X500Name(subject);
+        byte[] certReqInfo = CSR_Generator.createCertReqInfo(x500Name, getPublicKey());
 
-        return csr;
+        String algorithms = "SHA256WithRSA";
+        byte[] certReqSignature = signData(certReqInfo);
+
+        byte[] csrDEREncoded = CSR_Generator.createCertReqInfoValue(certReqInfo, algorithms, certReqSignature);
+        String csrPEMFormat = createPEMFormat(csrDEREncoded);
+
+        writeToFile(csrDEREncoded, "csr.der");
+        writeToFile(csrPEMFormat.getBytes(), "csr.csr");
+
+        return HexConverter.convert(csrDEREncoded);
+    }
+
+    public static String createPEMFormat(byte[] data) {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        final PrintStream ps = new PrintStream(os);
+        ps.println("-----BEGIN CERTIFICATE REQUEST-----");
+        ps.println(Base64.getMimeEncoder().encodeToString(data));
+        ps.println("-----END CERTIFICATE REQUEST-----");
+        return os.toString();
     }
 
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
@@ -76,31 +87,8 @@ public class CSR_Generation {
         return HexConverter.hexStringToByteArray(response);
     }
 
-    /*
-     * Getter & Setter
-     */
-    public APDU getApdu() {
-        return apdu;
+    public static void writeToFile(byte[] data, String file) throws IOException {
+        FileOutputStream os = new FileOutputStream(file);
+        os.write(data);
     }
-
-    public void setApdu(APDU apdu) {
-        this.apdu = apdu;
-    }
-
-    public List_of_apdus getList_of_apdus() {
-        return list_of_apdus;
-    }
-
-    public void setList_of_apdus(List_of_apdus list_of_apdus) {
-        this.list_of_apdus = list_of_apdus;
-    }
-
-    public CSR_Generator getGenerator() {
-        return generator;
-    }
-
-    public void setGenerator(CSR_Generator generator) {
-        this.generator = generator;
-    }
-
 }

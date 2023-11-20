@@ -10,5 +10,6 @@
     <orderEntry type="library" name="Itext7-Core" level="project" />
     <orderEntry type="library" name="log4j-api-2.21.1" level="project" />
     <orderEntry type="library" name="bcpkix-jdk15on-1.50" level="project" />
+    <orderEntry type="library" name="kona-crypto-1.0.5" level="project" />
   </component>
 </module>

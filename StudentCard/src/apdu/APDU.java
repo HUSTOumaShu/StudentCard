@@ -31,7 +31,6 @@ public class APDU {
             card = terminal.connect("*");
             isConnect = true;
         } catch (CardException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -50,7 +49,6 @@ public class APDU {
                         + " " + Integer.toHexString(sw2));
             }
         } catch (CardException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -65,7 +63,6 @@ public class APDU {
             outputStream.write(header);
             outputStream.write(data);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         this.command = new CommandAPDU(outputStream.toByteArray());
@@ -90,7 +87,6 @@ public class APDU {
             }
             return str_data;
         } catch (CardException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return "";
@@ -108,7 +104,6 @@ public class APDU {
         try {
             this.card.disconnect(false);
         } catch (CardException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
