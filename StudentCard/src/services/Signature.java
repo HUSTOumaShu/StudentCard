@@ -6,13 +6,16 @@ import apdu.List_of_apdus;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.StampingProperties;
 import com.itextpdf.signatures.*;
+import org.apache.logging.log4j.core.util.FileUtils;
 import tools.HexConverter;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.X509Certificate;
 
@@ -24,12 +27,18 @@ public class Signature {
         this.certification = certification;
     }
 
-    public void signPdfFile(String src_path, String dest_path, X509Certificate certificate,
+    public void signPdfFile(String src_path, X509Certificate certificate,
                             String reason, String location) throws IOException, GeneralSecurityException {
         X509Certificate[] chain = new X509Certificate[1];
         chain[0] = certificate;
 
         PdfReader reader = new PdfReader(src_path);
+        File source = new File(src_path);
+        StringBuilder str = new StringBuilder(src_path);
+        String tmp = str.substring(0, src_path.length() - 4);
+        String dest_path = tmp + "_signed.pdf";
+        File dest = new File(dest_path);
+        Files.copy(source.toPath(), dest.toPath());
         FileOutputStream os = new FileOutputStream(dest_path);
         PdfSigner signer = new PdfSigner(reader, os, new StampingProperties());
 
